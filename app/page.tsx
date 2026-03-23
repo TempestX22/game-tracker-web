@@ -15,13 +15,18 @@ export default function Home() {
   useEffect(() => {
     async function fetchFeatured() {
       try {
-        const res = await fetch('/api/upcoming');
+        const res = await fetch('/api/upcoming?dates=2019-09-01,2019-09-30&platforms=18,1,7&page_size=20');
         if (!res.ok) {
           const errText = await res.text();
-          setUpcomingError(`Upcoming API error ${res.status}: ${errText}`);
+          const cleanMsg = errText && errText.toLowerCase().includes('<html')
+            ? 'Unable to load upcoming games (404: not found).'
+            : `Upcoming API error ${res.status}: ${errText}`;
+          setUpcomingError(cleanMsg);
+          console.warn('Upcoming API raw error:', errText);
           return;
         }
         const payload = await res.json();
+        setUpcomingError(null);
         setFeatured(payload.games || []);
       } catch (error) {
         setUpcomingError(`Upcoming fetch failed: ${error}`);

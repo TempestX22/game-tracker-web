@@ -12,7 +12,7 @@ export default function HeroSlideshow({ games }: Props) {
 
   return (
     <section className="mt-8">
-      <h2 className="mb-4 text-xl font-bold text-white">Featured Updates</h2>
+      <h2 className="mb-4 text-xl font-bold text-white">Upcoming Games</h2>
       <div className="flex overflow-x-auto gap-4 pb-2">
         {games.map((game, idx) => (
           <button

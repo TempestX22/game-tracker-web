@@ -1,7 +1,6 @@
 'use client';
 import HexNavButton from './HexNavButton';
 import SearchBar from './SearchBar';
-import UserDropdown from './UserDropdown';
 
 export default function Navbar() {
   return (
@@ -14,7 +13,6 @@ export default function Navbar() {
         </nav>
         <div className="flex items-center gap-3">
           <SearchBar />
-          <UserDropdown />
         </div>
       </div>
     </header>
