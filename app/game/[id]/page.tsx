@@ -14,6 +14,7 @@ export default function GameDetailPage () {
 
   const [game, setGame] = useState<RawgGameDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [status, setStatus] = useState<UserGameStatus>('backlog');
   const [platform, setPlatform] = useState('');
   const [score, setScore] = useState(80);
@@ -41,7 +42,7 @@ export default function GameDetailPage () {
         });
       })
       .catch((error) => {
-        console.error('Game fetch failed:', error);
+        setErrorMessage(`Game fetch failed: ${error}`);
       })
       .finally(() => setLoading(false));
   }, [id]);
@@ -72,6 +73,10 @@ export default function GameDetailPage () {
 
   if (loading) {
     return <div className="h-screen bg-black text-white">Loading…</div>;
+  }
+
+  if (errorMessage) {
+    return <div className="h-screen bg-black text-white">Error: {errorMessage}</div>;
   }
 
   if (!game) {

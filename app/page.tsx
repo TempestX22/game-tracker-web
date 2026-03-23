@@ -10,6 +10,7 @@ import { getRecentReviews } from '../lib/supabaseClient';
 export default function Home() {
   const [featured, setFeatured] = useState<RawgGame[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [upcomingError, setUpcomingError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchFeatured() {
@@ -17,13 +18,13 @@ export default function Home() {
         const res = await fetch('/api/upcoming');
         if (!res.ok) {
           const errText = await res.text();
-          console.error('Upcoming API error:', res.status, errText);
+          setUpcomingError(`Upcoming API error ${res.status}: ${errText}`);
           return;
         }
         const payload = await res.json();
         setFeatured(payload.games || []);
       } catch (error) {
-        console.error('Upcoming fetch failed:', error);
+        setUpcomingError(`Upcoming fetch failed: ${error}`);
       }
     }
     fetchFeatured();
@@ -40,6 +41,11 @@ export default function Home() {
       <Navbar />
       <div className="mx-auto max-w-6xl px-4 pb-16 pt-6">
         <HeroSlideshow games={featured} />
+        {upcomingError ? (
+          <div className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
+            {upcomingError}
+          </div>
+        ) : null}
 
         <section className="mt-10">
           <h2 className="mb-4 text-xl font-bold text-white">Recent Reviews</h2>
