@@ -13,6 +13,7 @@ export type RawgGameDetails = RawgGame & {
   description: string;
   website?: string;
   screenshots?: { id: number; image: string }[];
+  stores?: { store: { id: number; name: string } }[];
 };
 
 export type UserGameStatus = 'playing' | 'completed' | 'dropped' | 'backlog';

@@ -104,7 +104,7 @@ export default function GameDetailPage () {
             </div>
             <div className="prose prose-invert mt-6 max-w-none text-sm leading-relaxed">{game.description || 'No description available'}</div>
             <div className="mt-4 text-sm text-gray-300">
-              Platforms: {game.platforms?.map((p) => p.platform.name).join(', ') || 'Unknown'}
+              Available On: {game.stores?.map((s: any) => s.store.name).join(', ') || 'Unknown'}
             </div>
             <div className="mt-1 text-sm text-gray-300">Genres: {game.genres?.map((g) => g.name).join(', ') || 'Unknown'}</div>
           </div>
@@ -123,7 +123,12 @@ export default function GameDetailPage () {
               </div>
               <div className="flex items-center justify-between gap-2">
                 <label>Platform</label>
-                <input value={platform} placeholder="e.g. PC" onChange={(e) => setPlatform(e.target.value)} className="w-32 rounded-lg bg-black/80 p-2" />
+                <select value={platform} onChange={(e) => setPlatform(e.target.value)} className="rounded-lg bg-black/80 p-2">
+                  <option value="">Select platform</option>
+                  {game.stores?.map((s) => (
+                    <option key={s.store.id} value={s.store.name}>{s.store.name}</option>
+                  ))}
+                </select>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <label>Completion Date</label>

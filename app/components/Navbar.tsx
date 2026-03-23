@@ -8,6 +8,7 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <nav className="flex gap-1">
           <HexNavButton href="/" label="Home" side="first" />
+          <HexNavButton href="/all-games" label="All Games" />
           <HexNavButton href="/library" label="Library" />
           <HexNavButton href="/reviewed" label="Reviewed" side="last" />
         </nav>
