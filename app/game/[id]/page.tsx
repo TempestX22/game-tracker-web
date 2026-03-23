@@ -25,7 +25,13 @@ export default function GameDetailPage () {
     if (!id) return;
     setLoading(true);
     fetch(`/api/game?id=${id}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Game API ${res.status}: ${text}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         const apiGame = data.game;
         setGame({
@@ -34,7 +40,9 @@ export default function GameDetailPage () {
           description: apiGame.description || apiGame.description_raw || '',
         });
       })
-      .catch(console.error)
+      .catch((error) => {
+        console.error('Game fetch failed:', error);
+      })
       .finally(() => setLoading(false));
   }, [id]);
 

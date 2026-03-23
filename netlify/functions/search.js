@@ -12,9 +12,24 @@ exports.handler = async function (event) {
 
   const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(q)}&page_size=20`;
 
+  async function fetchJson(url) {
+    const res = await fetch(url);
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`RAWG API failed (${res.status} ${res.statusText}): ${text}`);
+    }
+    if (!text) {
+      throw new Error(`Empty response from RAWG API at ${url}`);
+    }
+    try {
+      return JSON.parse(text);
+    } catch (parseError) {
+      throw new Error(`Invalid JSON from RAWG API at ${url}: ${parseError.message} - body: ${text.slice(0, 400)}`);
+    }
+  }
+
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    const data = await fetchJson(url);
     return {
       statusCode: 200,
       body: JSON.stringify({ games: data.results || [] }),

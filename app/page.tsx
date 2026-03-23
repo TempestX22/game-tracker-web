@@ -13,9 +13,18 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchFeatured() {
-      const res = await fetch('/api/upcoming');
-      const payload = await res.json();
-      setFeatured(payload.games || []);
+      try {
+        const res = await fetch('/api/upcoming');
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error('Upcoming API error:', res.status, errText);
+          return;
+        }
+        const payload = await res.json();
+        setFeatured(payload.games || []);
+      } catch (error) {
+        console.error('Upcoming fetch failed:', error);
+      }
     }
     fetchFeatured();
 

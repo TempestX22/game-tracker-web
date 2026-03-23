@@ -10,13 +10,27 @@ exports.handler = async function (event) {
     return { statusCode: 500, body: JSON.stringify({ error: 'RAWG API key not set' }) };
   }
 
+  async function fetchJson(url) {
+    const res = await fetch(url);
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`RAWG API failed (${res.status} ${res.statusText}): ${text}`);
+    }
+    if (!text) {
+      throw new Error(`Empty response from RAWG API at ${url}`);
+    }
+    try {
+      return JSON.parse(text);
+    } catch (parseError) {
+      throw new Error(`Invalid JSON from RAWG API at ${url}: ${parseError.message} - body: ${text.slice(0, 400)}`);
+    }
+  }
+
   try {
-    const [gameRes, screenshotsRes] = await Promise.all([
-      fetch(`https://api.rawg.io/api/games/${id}?key=${apiKey}`),
-      fetch(`https://api.rawg.io/api/games/${id}/screenshots?key=${apiKey}`),
+    const [game, screenshots] = await Promise.all([
+      fetchJson(`https://api.rawg.io/api/games/${id}?key=${apiKey}`),
+      fetchJson(`https://api.rawg.io/api/games/${id}/screenshots?key=${apiKey}`),
     ]);
-    const game = await gameRes.json();
-    const screenshots = await screenshotsRes.json();
 
     return {
       statusCode: 200,
