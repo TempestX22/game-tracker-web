@@ -28,14 +28,18 @@ exports.handler = async function (event) {
   }
 
   try {
-    const url = `https://api.rawg.io/api/games?key=${apiKey}&dates=${encodeURIComponent(dates)}&platforms=${encodeURIComponent(platforms)}&page_size=${pageSize}`;
+    const today = new Date().toISOString().slice(0, 10);
+    const nextYear = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().slice(0, 10);
+    const url = `https://api.rawg.io/api/games?key=${apiKey}&dates=${today},${nextYear}&ordering=-added&page_size=20`;
+    console.log('Upcoming URL:', url);
     const data = await fetchJson(url);
     return {
       statusCode: 200,
-      body: JSON.stringify({ games: data.results || [], dateRange: dates, platforms }),
+      body: JSON.stringify({ games: data.results || [], dateRange: `${today},${nextYear}`, ordering: '-added' }),
       headers: { 'Content-Type': 'application/json' },
     };
   } catch (error) {
+    console.error('Upcoming error:', error.message);
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
 };

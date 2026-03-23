@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchFeatured() {
       try {
-        const res = await fetch('/api/upcoming?dates=2019-09-01,2019-09-30&platforms=18,1,7&page_size=20');
+        const res = await fetch('/api/upcoming');
         if (!res.ok) {
           const errText = await res.text();
           const cleanMsg = errText && errText.toLowerCase().includes('<html')

@@ -29,6 +29,7 @@ exports.handler = async function (event) {
   }
 
   try {
+    console.log('Search URL:', url);
     const data = await fetchJson(url);
     return {
       statusCode: 200,
@@ -36,6 +37,7 @@ exports.handler = async function (event) {
       headers: { 'Content-Type': 'application/json' },
     };
   } catch (error) {
+    console.error('Search error:', error.message);
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
 };
